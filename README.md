@@ -1,5 +1,3 @@
-# How to Run the code 
-
 ## IMPORTANT NOTE:
 Make sure all required libraries are downloaded for the dashboard libraries used:
 - Pandas
