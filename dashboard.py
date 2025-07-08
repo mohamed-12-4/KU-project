@@ -30,7 +30,6 @@ def calculate_bsm(S, K, T, r, sigma):
     return BlackScholesPut(S, K, T, r, sigma).price()
 
 def user_input_features():
-    # Replace with your actual feature names
     feature_names = ["asset_price", "maturity", "rate", "div", "ivol"]
     data = {feat: st.sidebar.number_input(feat, value=0.0, format="%.6f") for feat in feature_names}
     return pd.DataFrame([data])
