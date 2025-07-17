@@ -3,11 +3,18 @@ import pandas as pd
 import numpy as np
 import joblib
 from blackscholes import BlackScholesPut
+from tabpfn.model import config
 
 
 # ---- Load pretrained TabPFN model ----
 @st.cache_resource
 def load_model(path: str):
+    class InferenceConfig:
+        def __init__(self, *args, **kwargs):
+            pass
+
+    config.InferenceConfig = InferenceConfig
+
     with open(path, "rb") as f:
         return joblib.load(f)
 
