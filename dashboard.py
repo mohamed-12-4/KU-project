@@ -23,8 +23,9 @@ def load_model(path: str):
 def load_scaler(path: str):
     with open(path, "rb") as f:
         return joblib.load(f)
-MODEL_PATH = "./tabpfn_model_1.pkl"
-SCALER_PATH = "./scaler_1.pkl"
+is_colab = True
+MODEL_PATH =   "./tabpfn_model_1.pkl" if not is_colab else "/content/KU-project/tabpfn_model_1.pkl"  
+SCALER_PATH = "./scaler_1.pkl" if not is_colab else "/content/KU-project/scaler_1.pkl"
 tabpfn_model = load_model(MODEL_PATH)
 
 st.title("🏗️ TabPFN Prediction Dashboard")
