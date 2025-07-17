@@ -3,3 +3,5 @@ joblib
 numpy
 streamlit
 blackscholes
+tabpfn
+scikit-learn
