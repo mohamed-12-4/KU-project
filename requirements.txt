@@ -2,4 +2,4 @@ pandas
 joblib
 numpy
 streamlit
-blacksholes
+blackscholes
