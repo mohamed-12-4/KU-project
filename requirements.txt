@@ -3,5 +3,5 @@ joblib
 numpy
 streamlit
 blackscholes
-tabpfn
+tabpfn==2.0.9
 scikit-learn
