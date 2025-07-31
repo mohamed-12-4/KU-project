@@ -93,7 +93,8 @@ if st.button("Predict"):
         preds = tabpfn_model.predict(X_scaled)
         st.subheader("Prediction Result")
         if len(preds) == 1:
-            st.write(f"Estimated target: **{preds[0]:.6f}**")
+            final_prediction = preds[0] + df['european_op'].values[0]
+            st.write(f"Estimated target: **{final_prediction:.6f}**")
         else:
             st.write("Predictions:")
             st.dataframe(pd.DataFrame(np.array(preds) + df['european_op'].values, columns=["Prediction"]))
