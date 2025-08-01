@@ -23,7 +23,7 @@ def load_model(path: str):
 def load_scaler(path: str):
     with open(path, "rb") as f:
         return joblib.load(f)
-is_colab = True
+is_colab = False
 MODEL_PATH =   "./tabpfn_model_1.pkl" if not is_colab else "/content/KU-project/tabpfn_model_1.pkl"  
 SCALER_PATH = "./scaler_1.pkl" if not is_colab else "/content/KU-project/scaler_1.pkl"
 tabpfn_model = load_model(MODEL_PATH)
@@ -84,19 +84,53 @@ if st.button("Predict"):
                 batch = X_scaled[i:i + 10_000]
                 preds.extend(tabpfn_model.predict(batch))
         
-            
+            final_predictions = np.array(preds) + df['european_op'].values
             st.write("Predictions:")
-            st.dataframe(pd.DataFrame(np.array(preds) + df['european_op'].values, columns=["Prediction"]))
+            predictions_df = pd.DataFrame(final_predictions, columns=["Prediction"])
+            st.dataframe(predictions_df)
             
+            # Create downloadable CSV with original data + predictions for large files
+            if uploaded_file is not None:
+                download_df = input_df.copy()
+                download_df["Prediction"] = final_predictions
+                
+                csv_data = download_df.to_csv(index=False)
+                
+                st.download_button(
+                    label="📥 Download Results as CSV",
+                    data=csv_data,
+                    file_name="predictions_results.csv",
+                    mime="text/csv",
+                    help="Download your uploaded data with predictions"
+                )
             
-        
-        preds = tabpfn_model.predict(X_scaled)
-        st.subheader("Prediction Result")
-        if len(preds) == 1:
-            final_prediction = preds[0] + df['european_op'].values[0]
-            st.write(f"Estimated target: **{final_prediction:.6f}**")
         else:
-            st.write("Predictions:")
-            st.dataframe(pd.DataFrame(np.array(preds) + df['european_op'].values, columns=["Prediction"]))
+            preds = tabpfn_model.predict(X_scaled)
+            st.subheader("Prediction Result")
+            if len(preds) == 1:
+                final_prediction = preds[0] + df['european_op'].values[0]
+                st.write(f"Estimated target: **{final_prediction:.6f}**")
+            else:
+                st.write("Predictions:")
+                final_predictions = np.array(preds) + df['european_op'].values
+                predictions_df = pd.DataFrame(final_predictions, columns=["Prediction"])
+                st.dataframe(predictions_df)
+                
+                # Create downloadable CSV with original data + predictions
+                if uploaded_file is not None:
+                    # Combine original input data with predictions
+                    download_df = input_df.copy()
+                    download_df["Prediction"] = final_predictions
+                    
+                    # Convert to CSV
+                    csv_data = download_df.to_csv(index=False)
+                    
+                    st.download_button(
+                        label="📥 Download Results as CSV",
+                        data=csv_data,
+                        file_name="predictions_results.csv",
+                        mime="text/csv",
+                        help="Download your uploaded data with predictions"
+                    )
 
         st.caption("Model: TabPFNRegressor")
